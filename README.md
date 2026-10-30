@@ -14,3 +14,9 @@ npm run dev
 Production: `npm run build`, then `npm run preview`.
 
 Architectural images are cropped stills from the supplied recordings. Replace them with original project photography before release. Project names, studio copy, and contact details are demonstration content. The structural model approximates the reference using CSS, rather than the original 3D assets. No analytics or nonessential cookies are installed.
+
+## Motion
+
+The word field, value sequence, senses, structural model, and services use sticky viewports with scroll-controlled animation. Scrolling backwards reverses the scenes. Reduced-motion preferences remove pinning and keep content readable. The facade geometry is SVG in CSS 3D space, an approximation of the reference rather than its original model.
+
+Run `npx playwright test` for desktop, mobile, scroll, and reduced-motion checks. This environment uses `/usr/bin/chromium`; change `executablePath` in `playwright.config.js` if your browser lives elsewhere.
