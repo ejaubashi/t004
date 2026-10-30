@@ -1,3 +1,4 @@
+import { colorAt } from './colors.js';
 // Each scene has a scroll runway and a viewport that stays pinned inside it.
 const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
 const lerp=(a,b,t)=>a+(b-a)*t;
@@ -51,6 +52,7 @@ export function initMotion(selectService){
  const add=(el,render)=>{const scene={el,render,p:0,target:0,top:0,runway:1};scenes.push(scene);return scene};
  add(wordStage,p=>{
    const turn=smooth(.08,.72,p),exit=smooth(.76,1,p);
+   wordStage.style.backgroundColor=colorAt(['#243ac9','#5834a5','#954674'],p);
    wordField.style.transform=`translate3d(0,${lerp(12,-10,p)}vh,${lerp(-550,120,turn)-exit*1100}px) rotateX(${lerp(0,64,turn)}deg) rotateY(${lerp(0,-26,turn)}deg) rotateZ(${lerp(0,83,turn)}deg)`;
    wordField.style.opacity=String(1-exit*.85);
    wordCenter.style.opacity=String(1-smooth(.03,.2,p));
@@ -68,15 +70,18 @@ export function initMotion(selectService){
      const copy=el.querySelector('.value-copy');
      if(copy){const appear=smooth(i===1?.65:i===2?1.65:2.6,i===1?.88:i===2?1.88:2.84,phase);copy.style.opacity=String(appear);copy.style.transform=`translateY(${(1-appear)*32}px)`;}
    });
-   blackout.style.opacity=String(Math.max(0,1-Math.abs(phase-.56)/.12,1-Math.abs(phase-1.51)/.12)*.93);
+   blackout.style.backgroundColor=colorAt(['#ffb46a','#bca4ff','#78d8bb'],p);
+   blackout.style.opacity=String(Math.max(0,1-Math.abs(phase-.56)/.12,1-Math.abs(phase-1.51)/.12,1-Math.abs(phase-2.46)/.12)*.85);
  });
  add(senses,p=>{
+   senses.style.backgroundColor=colorAt(['#f6b89b','#f39a85'],p);
    const spans=senses.querySelectorAll('h2>span');
    spans[0].style.transform=`translateX(${lerp(-25,0,smooth(0,.4,p))}vw)`;
    spans[1].style.transform=`translateY(${lerp(35,-10,p)}vh)`;
    senses.querySelector('h2').style.opacity=String(1-smooth(.8,1,p));
  });
  add(engineering,p=>{
+   engineering.style.backgroundColor=colorAt(['#d3e9f3','#b8c9f0','#cbc0ed'],p);
    const reveal=smooth(.08,.5,p),edge=smooth(.72,1,p);
    model.style.transform=`translate3d(${lerp(12,-12,reveal)}%,0,${lerp(-150,80,reveal)}px) rotateX(${lerp(0,7,reveal)}deg) rotateY(${lerp(-5,-35,reveal)-edge*53}deg)`;
    layers.forEach((el,i)=>{const distance=(i-1.5)*lerp(4,150,reveal);el.style.transform=`translate3d(${distance}px,0,${(i-1.5)*lerp(4,75,reveal)}px)`;});

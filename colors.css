@@ -1,0 +1,44 @@
+/* A different palette for each chapter, including the moments between them. */
+body{background:#183c34;color:#fff6e5}
+.intro.light{background:#f2cf59;color:#292512}
+.word-stage,.motion-enabled .typography-scene{background:#243ac9;color:#fff2d5}
+.typography-scene .word-field span{color:#fff2d5;border-color:#fff2d526}
+.typography-scene .word-field span:nth-child(4n){color:#ffbe94}
+.typography-scene .word-field span:nth-child(5n){color:#c1efb1}
+.word-center{background:transparent}
+.material,.values-scene .material{background:#e6a8a0;color:#342126}
+.material img{opacity:.65;mix-blend-mode:luminosity}
+.image-label{color:#342126;background:#e6a8a0d9;padding:8px 12px}
+.bold{background:#ba3c28;color:#fff4e0}
+.confident{background:#4e2c70;color:#fff2e3}
+.quiet.light{background:#c9e5cc;color:#153c32}
+.values-scene .grain,.values-scene .mesh{opacity:.26;mix-blend-mode:luminosity}
+.motion-enabled .values-scene{background:#e6a8a0}
+.scene-blackout{background:#ffb46a}
+.senses.light{background:#f6b89b;color:#6c2825}
+.engineering.light{background:#d3e9f3;color:#213b65}
+.engineering p{color:#334c76}
+.engineering .layer:nth-child(1) svg{color:#23426c}
+.engineering .layer:nth-child(2) svg{color:#ad483e}
+.engineering .layer:nth-child(3) svg{color:#4a508d}
+.engineering .layer:nth-child(4) svg{color:#21685f}
+.works{background:#183c34;color:#f5e5bb}
+.project-card{background:#2d5849;color:#fff8e9}
+.project-card:after{content:'';position:absolute;inset:40% 0 0;background:linear-gradient(transparent,#15352fc9);opacity:0;transition:opacity .5s;pointer-events:none}
+.project-card:hover:after,.project-card:focus-visible:after{opacity:1}
+.project-caption{z-index:1}
+.load-more{border-color:#d8c593}
+.services{--service-bg:#164b43;background:var(--service-bg);color:#fff3df;transition:background-color .8s ease}
+.service-tabs button,.services-scene .service-tabs button{color:#fff3df99}
+.service-tabs button[aria-selected=true]{color:#fff3df}
+.service-content>p{color:#fff3df}
+.company{background:#d8c6ef;color:#3c2854}
+.company-bottom p{color:#503b67}
+.contact.light{background:#d5e55e;color:#2c3a20}
+.contact-title:hover{color:#536c29}
+dialog{background:#f7dbb7;color:#482c3b}
+dialog::backdrop{background:#342654bd}
+.cookies{background:#35284b;color:#fff3df}
+button:focus-visible,a:focus-visible{outline-color:currentColor}
+@media(max-width:700px){header.open{background:#35284b;color:#fff3df}.project-card:after{opacity:1}}
+@media(prefers-reduced-motion:reduce){.services{transition:none}}
