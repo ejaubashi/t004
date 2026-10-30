@@ -24,3 +24,7 @@ Run `npx playwright test` for desktop, mobile, scroll, and reduced-motion checks
 ## GPU effects
 
 The experimental effects use WebGL2 with a CSS fallback. They are disabled for reduced motion. See [the research and implementation notes](docs/effects-research.md) for primary sources, selected techniques, and practical limits.
+
+## Current art direction
+
+[Form in Flux](docs/form-in-flux.md) replaces the earlier light-overlay experiment with a morphing reflective sculpture, image aperture, image-slice transitions, and shaded architectural plates. The notes distinguish original work, consulted artist sources, and approximations. Deployment runs through the GitHub Pages workflow on pushes to main.

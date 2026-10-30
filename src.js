@@ -1,6 +1,7 @@
 import './style.css';
 import './colors.css';
 import './effects.css';
+import './art-direction.css';
 import { serviceColors } from './colors.js';
 const words=['Architecture','Shapes','Experience','Defines','Perception','Refines','Touch','Feel','Hear'];
 document.querySelector('.word-field').innerHTML=Array.from({length:63},(_,i)=>`<span>${words[(i*5+Math.floor(i/7))%words.length]}</span>`).join('');

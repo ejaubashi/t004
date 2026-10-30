@@ -1,6 +1,6 @@
 import {test,expect} from '@playwright/test';
 test.use({launchOptions:{executablePath:'/usr/bin/chromium',args:['--no-sandbox','--enable-unsafe-swiftshader','--use-angle=swiftshader']}});
-const modes=[['.word-stage',.45],['.values-scene',.56/3],['.engineering',.55],['.services',.125]];
+const modes=[['.intro',.45],['.word-stage',.45],['.values-scene',.56/3],['.engineering',.55],['.services',.125]];
 async function exercise(page){
  const errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
  await page.goto('http://localhost:5173');

@@ -1,3 +1,5 @@
+> Historical notes for the previously published overlay experiment. See [Form in Flux](form-in-flux.md) for the current local study.
+
 # Special-effects study — 30 October 2026
 
 Primary sources consulted:

@@ -17,6 +17,7 @@ export function initMotion(selectService){
  const scenes=[];
  const effects=createEffects();
  const wrap=(el,cls)=>{el.classList.add('motion-scene',cls);const viewport=document.createElement('div');viewport.className='scene-viewport';viewport.append(...el.childNodes);el.append(viewport);return viewport};
+ const intro=document.querySelector('.intro');wrap(intro,'intro-scene');
  const wordStage=document.querySelector('.word-stage');
  const wordView=wrap(wordStage,'typography-scene');
  const wordField=wordView.querySelector('.word-field');
@@ -52,6 +53,7 @@ export function initMotion(selectService){
  const serviceArt=services.querySelector('.service-art');
  const serviceDescription=services.querySelector('#service-description');
  const add=(el,render)=>{const scene={el,render,p:0,target:0,top:0,runway:1};scenes.push(scene);return scene};
+ add(intro,p=>{intro.style.setProperty('--intro-progress',p);intro.querySelector('h1').style.transform=`translateY(${-p*100}px)`;});
  add(wordStage,p=>{
    const turn=smooth(.08,.72,p),exit=smooth(.76,1,p);
    wordStage.style.backgroundColor=colorAt(['#243ac9','#5834a5','#954674'],p);
@@ -63,6 +65,7 @@ export function initMotion(selectService){
  });
  add(values,p=>{
    const phase=p*3;
+   values.style.backgroundColor=colorAt(['#e6a8a0','#ba3c28','#4e2c70','#c9e5cc'],p);
    panels.forEach((el,i)=>{
      const alpha=i===0?1-smooth(.4,.75,phase):i===1?smooth(.4,.75,phase)*(1-smooth(1.35,1.7,phase)):i===2?smooth(1.35,1.7,phase)*(1-smooth(2.3,2.65,phase)):smooth(2.3,2.65,phase);
      el.style.opacity=String(alpha);
@@ -127,14 +130,14 @@ export function initMotion(selectService){
      const active=scenes.find(s=>scrollY+innerHeight*.5>=s.top&&scrollY+innerHeight*.5<s.top+s.el.offsetHeight);
      let mode=0,intensity=0,progress=active?.p||0;
      if(active){
-       if(active.el===wordStage)intensity=.85;
-       else if(active.el===values){const phase=progress*3;const mid=[.56,1.51,2.46].reduce((a,b)=>Math.abs(phase-a)<Math.abs(phase-b)?a:b);mode=1;intensity=Math.max(0,1-Math.abs(phase-mid)/.25);progress=clamp((phase-mid+.25)/.5);}
-       else if(active.el===senses)intensity=.3;
-       else if(active.el===engineering){mode=2;intensity=.75;}
-       else if(active.el===services){mode=1;intensity=Math.abs(progress*4-Math.round(progress*4))*1.5;progress=(progress*4+.5)%1;}
+       if(active.el===intro){mode=0;intensity=1;}
+       else if(active.el===wordStage){mode=1;intensity=1;}
+       else if(active.el===values){mode=2;intensity=.48*(1-smooth(.75,1,progress));}
+       else if(active.el===senses){mode=0;intensity=.8;}
+       else if(active.el===engineering){mode=3;intensity=1;}
+       else if(active.el===services){mode=2;intensity=.45;}
      }
-     const rect=active?.el.getBoundingClientRect();
-     effects.setScene({mode,intensity,progress,top:rect?Math.max(0,rect.top):0,bottom:rect?Math.max(0,innerHeight-rect.bottom):0});
+     effects.setScene({mode,intensity,progress,host:active?.el.querySelector('.scene-viewport')});
    }
    let index=0;navTargets.forEach((el,i)=>{if(el.getBoundingClientRect().top<innerHeight*.45)index=i});
    if(index!==navIndex){navIndex=index;nav.forEach((a,i)=>a.classList.toggle('active',i===index));document.querySelector('.nav-line').style.width=`${29+index*13}%`;}
