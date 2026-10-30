@@ -1,5 +1,6 @@
 import './style.css';
 import './colors.css';
+import './effects.css';
 import { serviceColors } from './colors.js';
 const words=['Architecture','Shapes','Experience','Defines','Perception','Refines','Touch','Feel','Hear'];
 document.querySelector('.word-field').innerHTML=Array.from({length:63},(_,i)=>`<span>${words[(i*5+Math.floor(i/7))%words.length]}</span>`).join('');
@@ -19,3 +20,13 @@ const cursor=document.querySelector('.cursor');window.addEventListener('pointerm
 
 import { initMotion, scrollToService } from "./motion.js";
 initMotion(selectService);
+
+// Delegate pointer lighting so newly loaded project cards behave the same way.
+if(matchMedia('(hover: hover) and (prefers-reduced-motion: no-preference)').matches){
+ document.querySelector('.project-grid').addEventListener('pointermove',event=>{
+  const card=event.target.closest('.project-card');if(!card)return;
+  const r=card.getBoundingClientRect(),x=(event.clientX-r.left)/r.width,y=(event.clientY-r.top)/r.height;
+  card.style.setProperty('--pointer-x',`${x*100}%`);card.style.setProperty('--pointer-y',`${y*100}%`);
+  card.style.setProperty('--shift-x',`${(x-.5)*-14}px`);card.style.setProperty('--shift-y',`${(y-.5)*-14}px`);
+ });
+}

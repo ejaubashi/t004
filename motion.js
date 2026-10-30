@@ -1,4 +1,5 @@
 import { colorAt } from './colors.js';
+import { createEffects } from './gpu-effects.js';
 // Each scene has a scroll runway and a viewport that stays pinned inside it.
 const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
 const lerp=(a,b,t)=>a+(b-a)*t;
@@ -14,6 +15,7 @@ export function initMotion(selectService){
  const reduced=motionQuery.matches;
  document.documentElement.classList.add(reduced?'motion-reduced':'motion-enabled');
  const scenes=[];
+ const effects=createEffects();
  const wrap=(el,cls)=>{el.classList.add('motion-scene',cls);const viewport=document.createElement('div');viewport.className='scene-viewport';viewport.append(...el.childNodes);el.append(viewport);return viewport};
  const wordStage=document.querySelector('.word-stage');
  const wordView=wrap(wordStage,'typography-scene');
@@ -68,10 +70,12 @@ export function initMotion(selectService){
      const img=el.querySelector('img,.grain,.mesh');
      if(img)img.style.transform=`scale(${lerp(1.2,1.02,clamp(phase-i+.75))}) translate3d(0,${lerp(3,-3,p)}%,0)`;
      const copy=el.querySelector('.value-copy');
-     if(copy){const appear=smooth(i===1?.65:i===2?1.65:2.6,i===1?.88:i===2?1.88:2.84,phase);copy.style.opacity=String(appear);copy.style.transform=`translateY(${(1-appear)*32}px)`;}
+     if(copy){const appear=smooth(i===1?.65:i===2?1.65:2.6,i===1?.88:i===2?1.88:2.84,phase);copy.style.opacity=String(appear);copy.style.transform=`translateY(${(1-appear)*32}px)`;const title=copy.querySelector('h2');title.style.clipPath=`inset(0 ${(1-appear)*100}% 0 0)`;title.style.transform=`skewY(${(1-appear)*4}deg)`;}
    });
    blackout.style.backgroundColor=colorAt(['#ffb46a','#bca4ff','#78d8bb'],p);
-   blackout.style.opacity=String(Math.max(0,1-Math.abs(phase-.56)/.12,1-Math.abs(phase-1.51)/.12,1-Math.abs(phase-2.46)/.12)*.85);
+   const pulse=Math.max(0,1-Math.abs(phase-.56)/.17,1-Math.abs(phase-1.51)/.17,1-Math.abs(phase-2.46)/.17);
+   blackout.style.opacity=String(pulse*.26);
+   blackout.style.clipPath=`polygon(0 0, ${clamp(pulse)*100}% 0, ${clamp(pulse+.15)*100}% 100%, 0 100%)`;
  });
  add(senses,p=>{
    senses.style.backgroundColor=colorAt(['#f6b89b','#f39a85'],p);
@@ -83,6 +87,7 @@ export function initMotion(selectService){
  add(engineering,p=>{
    engineering.style.backgroundColor=colorAt(['#d3e9f3','#b8c9f0','#cbc0ed'],p);
    const reveal=smooth(.08,.5,p),edge=smooth(.72,1,p);
+   model.style.setProperty('--scan',`${p*220}%`);
    model.style.transform=`translate3d(${lerp(12,-12,reveal)}%,0,${lerp(-150,80,reveal)}px) rotateX(${lerp(0,7,reveal)}deg) rotateY(${lerp(-5,-35,reveal)-edge*53}deg)`;
    layers.forEach((el,i)=>{const distance=(i-1.5)*lerp(4,150,reveal);el.style.transform=`translate3d(${distance}px,0,${(i-1.5)*lerp(4,75,reveal)}px)`;});
    engineeringCopy.style.opacity=String(smooth(.02,.18,p));
@@ -96,7 +101,7 @@ export function initMotion(selectService){
    if(serviceLock!==null&&Math.abs(continuous-serviceLock)<.015)serviceLock=null;
    const active=tabs.children[index];
    if(active){const x=active.offsetLeft-services.clientWidth*.5+active.offsetWidth*.5;tabs.style.transform=`translateX(${-x}px)`;}
-   const between=Math.abs(continuous-index)*2;
+   const between=clamp(Math.abs(continuous-index)*2);
    serviceArt.style.opacity=String(1-between*.65);
    serviceArt.style.transform=`translateY(${between*35}px)`;
    serviceDescription.style.opacity=String(1-between*.7);
@@ -117,6 +122,19 @@ export function initMotion(selectService){
      s.p=Math.abs(diff)<.0001?s.target:s.p+diff*(1-Math.exp(-dt/100));
      if(Math.abs(diff)>.0001)unsettled=true;
      if(scrollY+innerHeight>=s.top-50&&scrollY<=s.top+s.el.offsetHeight+50)s.render(s.p);
+   }
+   if(!reduced){
+     const active=scenes.find(s=>scrollY+innerHeight*.5>=s.top&&scrollY+innerHeight*.5<s.top+s.el.offsetHeight);
+     let mode=0,intensity=0,progress=active?.p||0;
+     if(active){
+       if(active.el===wordStage)intensity=.85;
+       else if(active.el===values){const phase=progress*3;const mid=[.56,1.51,2.46].reduce((a,b)=>Math.abs(phase-a)<Math.abs(phase-b)?a:b);mode=1;intensity=Math.max(0,1-Math.abs(phase-mid)/.25);progress=clamp((phase-mid+.25)/.5);}
+       else if(active.el===senses)intensity=.3;
+       else if(active.el===engineering){mode=2;intensity=.75;}
+       else if(active.el===services){mode=1;intensity=Math.abs(progress*4-Math.round(progress*4))*1.5;progress=(progress*4+.5)%1;}
+     }
+     const rect=active?.el.getBoundingClientRect();
+     effects.setScene({mode,intensity,progress,top:rect?Math.max(0,rect.top):0,bottom:rect?Math.max(0,innerHeight-rect.bottom):0});
    }
    let index=0;navTargets.forEach((el,i)=>{if(el.getBoundingClientRect().top<innerHeight*.45)index=i});
    if(index!==navIndex){navIndex=index;nav.forEach((a,i)=>a.classList.toggle('active',i===index));document.querySelector('.nav-line').style.width=`${29+index*13}%`;}

@@ -20,3 +20,7 @@ Architectural images are cropped stills from the supplied recordings. Replace th
 The word field, value sequence, senses, structural model, and services use sticky viewports with scroll-controlled animation. Scrolling backwards reverses the scenes. Reduced-motion preferences remove pinning and keep content readable. The facade geometry is SVG in CSS 3D space, an approximation of the reference rather than its original model.
 
 Run `npx playwright test` for desktop, mobile, scroll, and reduced-motion checks. This environment uses `/usr/bin/chromium`; change `executablePath` in `playwright.config.js` if your browser lives elsewhere.
+
+## GPU effects
+
+The experimental effects use WebGL2 with a CSS fallback. They are disabled for reduced motion. See [the research and implementation notes](docs/effects-research.md) for primary sources, selected techniques, and practical limits.
